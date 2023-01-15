@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "ContentToPopup Test",
+  "version": "1.0",
+  "permissions": ["tabs", "storage"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+    "content_scripts": [{
+        "js": ["content.js"],
+        "matches": [
+            "https://*/*"
+        ]
+    }]
+}
