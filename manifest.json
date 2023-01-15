@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "ContentToPopup Test",
   "version": "1.0",
-  "permissions": ["tabs", "storage"],
+  "permissions": ["tabs", "storage", "activeTab"],
   "web_accessible_resources": [{
     "resources": ["normal_popup.html"],
     "matches": [
