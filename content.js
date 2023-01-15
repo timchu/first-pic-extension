@@ -1,25 +1,36 @@
-function grabImages() {
-    const images = document.querySelectorAll("img");
-    return Array.from(images).map(image=>image.src);    
-}
-let image_srcs = grabImages();
-let first_image_src = image_srcs[0];
+function renderInPopup(popup, imageSrc){
+//  popup.document.body.innerHTML +='<img src="' + imageSrc + '>';
 
-let num_images_saved = 0;
-let page_key = document.URL;
-let stored_image_srcs = chrome.storage.local.get([page_key]).then(() =>{
-  console.log("Stored image srcs: " + stored_image_srcs);
-});
-if(stored_image_srcs) {
-  stored_image_srcs = {};
+// This line works fine.
+//  console.log("Hello");
+// THis line fails iwth DOMException: blocked a frame...
+  console.log(popup.document);
+//  console.log(popup.document.body.innerHTML);
 }
-stored_image_srcs[num_images_saved] = first_image_src;
-let json_obj = {}
-json_obj[page_key] = stored_image_srcs
-chrome.storage.local.set(json_obj).then(() => {
-  console.log(JSON.stringify(json_obj));
-  console.log("Value set!");
-});
-num_images_saved += 1;
-console.log("Stored image srcs after add: " + stored_image_srcs);
-console.log("content JS loaded!")
+function log(){
+console.log("Logged the function!")
+}
+function wrapImages(popup) {
+  console.log("Wrap images");
+  const images = document.querySelectorAll("img");
+  console.log("Image length: " + images.length);
+  for (let i = 0; i < images.length; i++) {
+    const image = images[i]
+//    const clickFn = "renderInPopup(popup,'" + image.src + "')";
+    console.log("Image :" + image.outerHTML);
+    image.onclick = function(){renderInPopup(popup, image.src)};
+    //image.onclick = function(){log()};
+    console.log("Image postProcess :" + image.outerHTML);
+  }
+  console.log("Done wrapping images");
+}
+let popup = window.open(
+    chrome.runtime.getURL("normal_popup.html"),
+    "exampleName",
+    "width=400,height=400"
+);
+function onLoad(popup) { 
+  console.log("WINDOW LOADED");
+  wrapImages(popup);
+}
+popup.window.addEventListener('load', onLoad(popup), false);
